@@ -20,8 +20,9 @@ int _ternary_search(int needle, int haystack[], int lower_bound, int upper_bound
         return haystack[lower_bound] == needle ? lower_bound : -1;
     }
 
-    int lower_pivot = (upper_bound + lower_bound + 1) / 3;
-    int upper_pivot = lower_pivot * 2;
+    size_t chunk_size  = (upper_bound - lower_bound) / 3;
+    size_t lower_pivot = lower_bound + chunk_size;
+    size_t upper_pivot = upper_bound - chunk_size;
 
     if (needle == haystack[lower_pivot]) {
         return lower_pivot;
@@ -82,15 +83,21 @@ int execute_test(test_case* t) {
 }
 
 int main(int argc, char* argv[]) {
-    int haystack[]       = {-10, -4, 0, 5, 20, 140};
+    int haystack[]       = {-28, -10, -4, 0, 5, 10, 20, 140, 1000};
     size_t haystack_size = sizeof(haystack) / sizeof(typeof(*haystack));
 
     printf("Starting tests...\n");
 
-    test_case test_cases[] = {
-        {-10, 0, haystack, haystack_size},   {-4, 1, haystack, haystack_size}, {0, 2, haystack, haystack_size},
-        {5, 3, haystack, haystack_size},     {20, 4, haystack, haystack_size}, {140, 5, haystack, haystack_size},
-        {-243, -1, haystack, haystack_size}, {-10, -1, NULL, haystack_size},   {20, -1, haystack, 0}};
+    test_case test_cases[] = {{-28, 0, haystack, haystack_size},  {-10, 1, haystack, haystack_size},
+                              {-4, 2, haystack, haystack_size},   {0, 3, haystack, haystack_size},
+                              {5, 4, haystack, haystack_size},    {10, 5, haystack, haystack_size},
+                              {20, 6, haystack, haystack_size},   {140, 7, haystack, haystack_size},
+                              {1000, 8, haystack, haystack_size}, {-20, -1, haystack, haystack_size},
+                              {-5, -1, haystack, haystack_size},  {-2, -1, haystack, haystack_size},
+                              {2, -1, haystack, haystack_size},   {8, -1, haystack, haystack_size},
+                              {15, -1, haystack, haystack_size},  {50, -1, haystack, haystack_size},
+                              {500, -1, haystack, haystack_size}, {-243, -1, haystack, haystack_size},
+                              {-10, -1, NULL, haystack_size},     {20, -1, haystack, 0}};
     size_t test_cases_size = sizeof(test_cases) / sizeof(test_case);
 
     int failures = 0;
