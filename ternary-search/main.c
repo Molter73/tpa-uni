@@ -16,8 +16,10 @@
  *   Index for the needle in the haystack if found, -1 otherwise.
  */
 int _ternary_search(int needle, int haystack[], int lower_bound, int upper_bound) {
-    if (lower_bound >= upper_bound) {
+    if (lower_bound == upper_bound) {
         return haystack[lower_bound] == needle ? lower_bound : -1;
+    } else if (lower_bound > upper_bound) {
+        return -1;
     }
 
     size_t chunk_size  = (upper_bound - lower_bound) / 3;
