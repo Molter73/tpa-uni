@@ -10,7 +10,7 @@
  *   needle: The value we will be looking for.
  *   haystack: The array we will try to find the needle in.
  *   lower_bound: The lower limit in the haystack.
- *   upper_bound: The uuper limit in the haystack.
+ *   upper_bound: The upper limit in the haystack.
  *
  * Returns:
  *   Index for the needle in the haystack if found, -1 otherwise.
