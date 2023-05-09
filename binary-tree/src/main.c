@@ -8,6 +8,12 @@ typedef struct btree_s {
     int content;
 } btree_t;
 
+/**
+ * Create a new btree_t node and place the provided value as its content
+ *
+ * @param value an integer to be stored in the new node.
+ * @return a pointer to the new node. Null if we fail to allocate memory.
+ */
 btree_t* btree_new_node(int value) {
     btree_t* node = calloc(1, sizeof(btree_t));
     if (node == NULL) {
@@ -18,6 +24,11 @@ btree_t* btree_new_node(int value) {
     return node;
 }
 
+/**
+ * Go through a tree and free all subnodes.
+ *
+ * @param tree a pointer to a btree_t node.
+ */
 void btree_free(btree_t* tree) {
     if (tree == NULL) {
         return;
@@ -28,6 +39,13 @@ void btree_free(btree_t* tree) {
     free(tree);
 }
 
+/**
+ * Search for a node containing the provided value in the tree.
+ *
+ * @param tree a pointer to a btree_t node.
+ * @param value an integer to look for in the tree
+ * @return a pointer to the node holding the value if found, NULL otherwise.
+ */
 btree_t* btree_search(btree_t* tree, int value) {
     if (tree == NULL) {
         return NULL;
@@ -43,6 +61,12 @@ btree_t* btree_search(btree_t* tree, int value) {
     return btree_search(tree->right, value);
 }
 
+/**
+ * Insert a new node into a tree with the value provided as its content.
+ *
+ * @param tree a pointer to a btree_t node where the new node will be inserted into.
+ * @param value an integer to be used as the content for a new node.
+ */
 void btree_insert(btree_t* tree, int value) {
     if (tree == NULL || tree->content == value) {
         // Nothing to do if there is no tree or the tree already has the value
@@ -69,6 +93,20 @@ typedef enum {
     BIGGEST,
 } btree_pop_bias_t;
 
+/**
+ * Look for a leaf and "pop it" from the tree.
+ *
+ * This function is used as part of the process for deleting a node, the deleted
+ * node will be replaced by the popped leaf. In order to reach the leaf, we can
+ * tell the function to look for the leaf on the lower or higher values with the
+ * bias argument. By popped leaf, we refer to a node on the lowest level of the
+ * tree that is removed from the tree for the caller to use without the
+ * possibility of the node to be pointed by multiple points in the tree.
+ *
+ * @param node a pointer to a btree_t node where we will look for a leaf
+ * @param bias a bias parameter for us to choose which branch should be preferred.
+ * @return a pointer to the popped leaf.
+ */
 btree_t* btree_pop_leaf(btree_t* node, btree_pop_bias_t bias) {
     if (node == NULL) {
         return NULL;
@@ -107,6 +145,16 @@ btree_t* btree_pop_leaf(btree_t* node, btree_pop_bias_t bias) {
     return leaf;
 }
 
+/**
+ * Replace a node from a tree with a leaf.
+ *
+ * This function is used as part of the delete node process. The provided node
+ * will be replaced by a popped leaf, keeping the tree balanced.
+ *
+ * @param node a pointer to the btree_t node to be replaced by a leaf.
+ * @param parent a pointer to the parent of the provided node.
+ * @return a pointer to the new node in the tree.
+ */
 btree_t* btree_replace_node(btree_t* node, btree_t* parent) {
     if (node == NULL) {
         return NULL;
@@ -139,6 +187,17 @@ btree_t* btree_replace_node(btree_t* node, btree_t* parent) {
     return replacement_node;
 }
 
+/**
+ * Find a node in a tree that contains the provided value and remove it from
+ * the tree, replacing it with one of its leaves.
+ *
+ * This function is used as part of the delete node process. The parent of the
+ * node needs to be provided to know where the leaf should be added in the tree.
+ *
+ * @param node a pointer to the current node being probed for the value in the tree.
+ * @param parent a pointer to the parent for the current node.
+ * @param value the integer we are looking for in the tree.
+ */
 void btree_delete_inner(btree_t* node, btree_t* parent, int value) {
     if (node == NULL) {
         return;
@@ -156,6 +215,13 @@ void btree_delete_inner(btree_t* node, btree_t* parent, int value) {
     }
 }
 
+/**
+ * Look for a node containing the provided value and remove it from the tree.
+ *
+ * @param tree a pointer to the root of the tree to look for the value.
+ * @param value an integer we are looking for in the tree.
+ * @return a pointer to the root of the tree, needed if the root is the node to be removed.
+ */
 btree_t* btree_delete(btree_t* tree, int value) {
     if (tree == NULL) {
         return NULL;
@@ -174,6 +240,14 @@ btree_t* btree_delete(btree_t* tree, int value) {
     return tree;
 }
 
+/**
+ * Print a formatted node of a tree. This is an inner function and you should
+ * use btree_print instead.
+ *
+ * @param tree a pointer to the current node to print.
+ * @param pointy a string with the arrow that should be printed next to the node.
+ * @param padding a string with the padding needed for the tree to look nice.
+ */
 void btree_print_inner(const btree_t* tree, const char* pointy, char padding[1024]) {
     if (tree == NULL) {
         return;
@@ -204,6 +278,11 @@ void btree_print_inner(const btree_t* tree, const char* pointy, char padding[102
     }
 }
 
+/**
+ * Print a tree in a nice way.
+ *
+ * @param tree a pointer to the tree to be printed.
+ */
 void btree_print(const btree_t* tree) {
     char padding[1024] = {0};
     if (tree == NULL) {
