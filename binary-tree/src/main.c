@@ -122,7 +122,7 @@ btree_t* btree_pop_leaf(btree_t* node, btree_pop_bias_t bias) {
         leaf = node->right != NULL ? node->right : node->left;
         break;
     default:
-        printf("Programmer logic, invalid btree pop bias\n");
+        printf("Programmer logic error, invalid btree pop bias\n");
         exit(-1);
     }
 
@@ -197,15 +197,15 @@ btree_t* btree_replace_node(btree_t* node, btree_t* parent) {
  * @param node a pointer to the current node being probed for the value in the tree.
  * @param parent a pointer to the parent for the current node.
  * @param value the integer we are looking for in the tree.
+ * @return a pointer to the new node that took this node's place, the passed in node otherwise.
  */
-void btree_delete_inner(btree_t* node, btree_t* parent, int value) {
+btree_t* btree_delete_inner(btree_t* node, btree_t* parent, int value) {
     if (node == NULL) {
-        return;
+        return NULL;
     }
 
     if (node->content == value) {
-        btree_replace_node(node, parent);
-        return;
+        return btree_replace_node(node, parent);
     }
 
     if (node->content > value) {
@@ -213,32 +213,18 @@ void btree_delete_inner(btree_t* node, btree_t* parent, int value) {
     } else {
         btree_delete_inner(node->right, node, value);
     }
+    return node;
 }
 
 /**
- * Look for a node containing the provided value and remove it from the tree.
+ * Convenience macro for deleting nodes in a tree. Looks for a node containing
+ * the provided value and removes it from the tree.
  *
  * @param tree a pointer to the root of the tree to look for the value.
  * @param value an integer we are looking for in the tree.
  * @return a pointer to the root of the tree, needed if the root is the node to be removed.
  */
-btree_t* btree_delete(btree_t* tree, int value) {
-    if (tree == NULL) {
-        return NULL;
-    }
-
-    if (tree->content == value) {
-        // We are deleting the root node
-        return btree_replace_node(tree, NULL);
-    }
-
-    if (tree->content > value) {
-        btree_delete_inner(tree->left, tree, value);
-    } else {
-        btree_delete_inner(tree->right, tree, value);
-    }
-    return tree;
-}
+#define btree_delete(tree, value) btree_delete_inner(tree, NULL, value)
 
 /**
  * Print a formatted node of a tree. This is an inner function and you should
@@ -261,7 +247,7 @@ void btree_print_inner(const btree_t* tree, const char* pointy, char padding[102
 
     if (tree->left) {
         printf("%s", padding);
-        strcat(padding, tree->right ? "|   " : "    ");
+        strcat(padding, "|   ");
         btree_print_inner(tree->left, "|-> ", padding);
         padding[strlen(padding) - 4] = '\0';
     } else {

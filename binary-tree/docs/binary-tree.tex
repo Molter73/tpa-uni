@@ -49,7 +49,7 @@ de modo que un usuario de la estructura no necesite acceder a los miembros de
 forma directa. También se implementaron algunas funciones con declaraciones un
 poco más específicas para resoluciones de problemas particulares, no se espera
 que un usuario utilice estas funciones. Con esa distinción, la lista de
-funciones publicas es la siguiente:
+funciones públicas es la siguiente:
 
 \begin{itemize}
     \item btree{\_}new{\_}node
@@ -60,8 +60,8 @@ funciones publicas es la siguiente:
     \item btree{\_}print
 \end{itemize}
 
-Las clases "privadas" que no deberían ser utilizadas por usuarios directamente
-son las siguientes:
+Los métodos "privados" que no deberían ser utilizados por usuarios directamente
+son los siguientes:
 
 \begin{itemize}
     \item btree{\_}pop{\_}leaf
@@ -74,7 +74,7 @@ En un proyecto más real, btree{\_}t y sus funciones vivirían en un archivo .c
 y sólo se expondrían las funciones públicas mediante un .h, por simplicidad
 aquí se decidió dejar todo en un mismo archivo fuente.
 
-La documentación para cada función está junto al código en formato doxygen.
+La documentación para cada función está en el código en formato doxygen.
 
 \pagebreak
 
@@ -88,7 +88,9 @@ La documentación para cada función está junto al código en formato doxygen.
 Para representar el árbol, se eligió un formato distinto en el que los nodos
 se imprimen en una forma similar al comando tree. Se puede ver comparando las
 representaciones que el subnodo superior en esta representación corresponde
-al lado izquierdo del nodo y el inferior al derecho.
+al lado izquierdo del nodo y el inferior al derecho. Las ramas que no apuntan
+a un nodo sólo imprimen la flecha sin un número asociado. Las hojas del árbol
+no imprimen ninguna flecha para que sea más fácil la visualización.
 
 \begin{figure}[H]
     \centering
@@ -133,8 +135,8 @@ ejercicio. Sin embargo, en mi código agregué una prueba removiendo la raíz
 por ser un caso particular de mi código.
 
 \subsection{¿Cuántos nodos tiene el árbol?}
-El árbol tiene 10 nodos al iniciar el ejercicio, sube a 12 al
-insertar 5 y 24 y vuelve a 10 tras eliminar 6 y 10.
+El árbol tiene 10 nodos al iniciar el ejercicio, sube a 12 al insertar 5 y 24,
+y vuelve a 10 tras eliminar 6 y 10.
 
 \subsection{¿Cuál es el valor almacenado en el nodo más a la izquierda del árbol?}
 Durante toda la duración del ejercicio, el nodo que está más a la izquierda es
